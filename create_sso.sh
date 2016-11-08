@@ -1,6 +1,6 @@
 # $1 = target subdomain
 #yum -y install java-1.8.0-openjdk
-#yum -y pwgen
+#yum -y install pwgen
 export DOMAIN=rsc7.com
 rm -r -f ${1}idm
 mkdir ${1}idm
