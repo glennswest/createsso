@@ -5,9 +5,13 @@ export DOMAIN=rsc7.com
 rm -r -f ${1}idm
 mkdir ${1}idm
 cd ${1}idm
-#pwgen 8 1 > .password
-pwgen -A 5 1 > .projectid
-echo 'password' > .password
+oc delete serviceaccount sso-service-account
+oc delete secret sso-app-secret
+oc delete project ${1}idm
+sleep 60
+#pwgen --symbols --numerals 8 1 > .password
+pwgen -A 5 1 --symbols > .projectid
+echo 'my-password' > .password
 export idmpassword=$(cat .password)
 export projectid=$(cat .projectid)
 oc new-project ${1}idm
@@ -39,24 +43,23 @@ echo "Stage 11 - Create App"
 echo ${1}
 echo $idmpassword
 echo $projectid
-oc new-app sso70-https -p \
-APPLICATION_NAME="sso",\
-HOSTNAME_HTTPS="secureidm.${1}.$DOMAIN",\
-HOSTNAME_HTTP="idm.${1}.$DOMAIN",\
-HTTPS_KEYSTORE="sso-https.jks",\
-HTTPS_PASSWORD="$idmpassword",\
-HTTPS_SECRET="sso-app-secret",\
-JGROUPS_ENCRYPT_KEYSTORE="jgroups.jceks",\
-JGROUPS_ENCRYPT_PASSWORD="$idmpassword",\
-JGROUPS_ENCRYPT_SECRET="sso-app-secret",\
-SERVICE_ACCOUNT_NAME=sso-service-account,\
-SSO_REALM=cloud,\
-SSO_SERVICE_USERNAME=sso-mgmtuser,\
-SSO_SERVICE_PASSWORD=mgmt-password,\
-SSO_ADMIN_USERNAME=admin,\
-SSO_ADMIN_PASSWORD=adm-password,\
-SSO_TRUSTSTORE=truststore.jks,\
-SSO_TRUSTSTORE_PASSWORD=$idmpassword \
--l app=sso70-https -l application=sso -l template=sso70-https 
-
-
+cat << EOF > sso.params
+APPLICATION_NAME="sso"
+HOSTNAME_HTTPS="secureidm.${1}.$DOMAIN"
+HOSTNAME_HTTP="idm.${1}.$DOMAIN"
+HTTPS_KEYSTORE="sso-https.jks"
+HTTPS_PASSWORD="$idmpassword"
+HTTPS_SECRET="sso-app-secret"
+JGROUPS_ENCRYPT_KEYSTORE="jgroups.jceks"
+JGROUPS_ENCRYPT_PASSWORD="$idmpassword"
+JGROUPS_ENCRYPT_SECRET="sso-app-secret"
+SERVICE_ACCOUNT_NAME=sso-service-account
+SSO_REALM=cloud
+SSO_SERVICE_USERNAME=sso-mgmtuser
+SSO_SERVICE_PASSWORD=mgmt-password
+SSO_ADMIN_USERNAME=admin
+SSO_ADMIN_PASSWORD=adm-password
+SSO_TRUSTSTORE=truststore.jks
+SSO_TRUSTSTORE_PASSWORD=$idmpassword
+EOF
+oc new-app sso70-https --param-file sso.params -l app=sso70-https -l application=sso -l template=sso70-https 
