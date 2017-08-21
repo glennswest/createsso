@@ -1,0 +1,93 @@
+Glenns-MacBook-Pro-2:createsso gwest$ ./create_login.sh 
+serviceaccount "sso-service-account" deleted
+secret "sso-app-secret" deleted
+project "idm" deleted
+Already on project "idm" on server "https://gsw.westus.cloudapp.azure.com:8443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git
+
+to build a new example application in Ruby.
+serviceaccount "sso-service-account" created
+role "view" added: "system:serviceaccount:idm:sso-service-account"
+Stage 1 - REQ
+Generating a 4096 bit RSA private key
+.....................................................................++
+..............................................++
+writing new private key to 'xpaas.key'
+-----
+Stage 2 - GENKEYPAIR
+Stage 3 - CERTREQ
+Stage 4 - X509
+Signature ok
+subject=/CN=login.52.160.91.126.nip.io
+Getting CA Private Key
+Stage 5 - IMPORT CRT
+Certificate was added to keystore
+Stage 6 - IMPORT SSO
+Certificate reply was installed in keystore
+Stage 7 - IMPORT XPAAS
+Certificate was added to keystore
+Stage 8 - GENSECKEY
+Stage 9 - OCCREATE SECRET
+secret "sso-app-secret" created
+Stage 10 - OCCREATE SECRET ADD
+Stage 11 - Create App
+
+my-password
+ni>l3
+--> Deploying template "openshift/sso71-postgresql" to project idm
+
+     Red Hat Single Sign-On 7.1 + PostgreSQL (Ephemeral)
+     ---------
+     Application template for SSO 7.1 PostgreSQL applications
+
+     A new SSO service (using PostgreSQL) has been created in your project. The admin username/password for accessing the master realm via the SSO console is admin/adm-password. The username/password for accessing the PostgreSQL database "root" is userYO1/JWKP8eN2. Please be sure to create the "sso-service-account" service account and the following secrets: "sso-app-secret" containing the sso-https.jks file used for serving secure content; "sso-app-secret" containing the jgroups.jceks file used for securing JGroups communications; "sso-app-secret" containing the truststore.jks file used for securing SSO requests.
+
+     * With parameters:
+        * Application Name=sso
+        * Custom http Route Hostname=nlogin.52.160.91.126.nip.io
+        * Custom https Route Hostname=login.52.160.91.126.nip.io
+        * Database JNDI Name=java:jboss/datasources/KeycloakDS
+        * Database Name=root
+        * Service Account Name=sso-service-account
+        * Server Keystore Secret Name=sso-app-secret
+        * Server Keystore Filename=sso-https.jks
+        * Server Keystore Type=
+        * Server Certificate Name=
+        * Server Keystore Password=my-password
+        * Datasource Minimum Pool Size=
+        * Datasource Maximum Pool Size=
+        * Datasource Transaction Isolation=
+        * PostgreSQL Maximum number of connections=
+        * PostgreSQL Shared Buffers=
+        * Database Username=userYO1 # generated
+        * Database Password=JWKP8eN2 # generated
+        * JGroups Secret Name=sso-app-secret
+        * JGroups Keystore Filename=jgroups.jceks
+        * JGroups Certificate Name=
+        * JGroups Keystore Password=my-password
+        * JGroups Cluster Password=xb21dGXQ # generated
+        * ImageStream Namespace=openshift
+        * SSO Admin Username=admin
+        * SSO Admin Password=adm-password
+        * SSO Realm=cloud
+        * SSO Service Username=sso-mgmtuser
+        * SSO Service Password=mgmt-password
+        * SSO Trust Store=truststore.jks
+        * SSO Trust Store Password=my-password
+        * SSO Trust Store Secret=sso-app-secret
+        * PostgreSQL Image Stream Tag=9.5
+
+--> Creating resources with label template=sso70-https ...
+    service "sso" created
+    service "secure-sso" created
+    service "sso-postgresql" created
+    route "sso" created
+    route "secure-sso" created
+    deploymentconfig "sso" created
+    deploymentconfig "sso-postgresql" created
+--> Success
+    Run 'oc status' to view your app.
+

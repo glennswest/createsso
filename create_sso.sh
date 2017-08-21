@@ -43,10 +43,10 @@ echo "Stage 11 - Create App"
 echo ${1}
 echo $idmpassword
 echo $projectid
+echo HOSTNAME_HTTPS="secureidm.${1}.$DOMAIN"
+echo HOSTNAME_HTTP="idm.${1}.$DOMAIN"
 cat << EOF > sso.params
 APPLICATION_NAME="sso"
-HOSTNAME_HTTPS="secureidm.${1}.$DOMAIN"
-HOSTNAME_HTTP="idm.${1}.$DOMAIN"
 HTTPS_KEYSTORE="sso-https.jks"
 HTTPS_PASSWORD="$idmpassword"
 HTTPS_SECRET="sso-app-secret"
